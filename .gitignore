@@ -1,0 +1,16 @@
+# Gerados ao rodar o programa (contêm dados da máquina - não versionar)
+backup/
+logs/
+relatorios/
+**/backup/
+**/logs/
+**/relatorios/
+*.html
+!docs/*.html
+
+# Rascunho da postagem (não faz parte do projeto)
+POSTAGEM.md
+
+# Sistema
+Thumbs.db
+desktop.ini
