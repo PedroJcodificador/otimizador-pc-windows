@@ -1,23 +1,8 @@
-# Otimizador do PC
+# Otimizador Empresarial
 
-Ferramenta de manutenção e otimização para Windows 10/11, feita em PowerShell, com menu em português, **backup automático de tudo que altera** e opção de desfazer.
+Ferramenta de manutenção e diagnóstico para estações de trabalho Windows 10/11, feita em PowerShell, com menu em português, **backup automático de tudo que altera** e opção de desfazer. Pensada para suporte de TI e manutenção preventiva.
 
-O projeto tem duas edições:
-
-| | **Edição Empresarial** | **Edição Pessoal / Gamer** |
-|---|---|---|
-| Pasta | [`Otimizador-Empresa/`](Otimizador-Empresa) | [`Otimizador/`](Otimizador) |
-| Foco | Estações de trabalho, suporte de TI, manutenção preventiva | PC de casa e jogos |
-| Diagnóstico com relatório HTML | ✅ | — (diagnóstico na tela) |
-| Limpeza de todos os perfis de usuário | ✅ | Usuário atual |
-| Modo automático (tarefa agendada / GPO / RMM) | ✅ | — |
-| Rede (testes + reset de pilha TCP/IP) | ✅ | — |
-| Atualizações do Windows + drivers | ✅ | Drivers |
-| Placa de vídeo, Modo de Jogo, latência | — | ✅ |
-
----
-
-## Edição Empresarial
+Os arquivos ficam na pasta [`Otimizador-Empresa/`](Otimizador-Empresa).
 
 ### Tela inicial
 
@@ -74,17 +59,6 @@ Agendar toda sexta-feira às 18h (rodar como administrador):
 ```bat
 schtasks /Create /TN "Manutencao Otimizador" /SC WEEKLY /D FRI /ST 18:00 /RU SYSTEM /RL HIGHEST /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\TI\Otimizador-Empresa\OtimizadorEmpresa.ps1 -Automatico -PastaRelatorio \\servidor\ti\relatorios"
 ```
-
----
-
-## Edição Pessoal / Gamer
-
-Clique duas vezes em `Otimizador\INICIAR.bat`.
-
-- Diagnóstico, limpeza (incluindo cache de shaders e de navegadores), programas na inicialização, reparo
-- Otimização para jogos: plano Desempenho Máximo, Modo de Jogo, prioridade de CPU/GPU para jogos, desativa gravação em segundo plano, aceleração do mouse (opcional)
-- **Placa de vídeo:** identifica NVIDIA/AMD/Intel, VRAM e idade do driver; ajusta a taxa do monitor para a máxima, ativa agendamento de GPU por hardware e otimizações de jogos em janela; em notebooks com duas placas força os jogos na dedicada; mostra os ajustes recomendados do painel de cada fabricante
-- **Drivers:** procura no Windows Update e leva à página oficial do fabricante da placa de vídeo
 
 ---
 
