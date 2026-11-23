@@ -60,15 +60,25 @@ Agendar toda sexta-feira às 18h (rodar como administrador):
 schtasks /Create /TN "Manutencao Otimizador" /SC WEEKLY /D FRI /ST 18:00 /RU SYSTEM /RL HIGHEST /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\TI\Otimizador-Empresa\OtimizadorEmpresa.ps1 -Automatico -PastaRelatorio \\servidor\ti\relatorios"
 ```
 
+Códigos de saída no modo `-Automatico` (úteis para Agendador de Tarefas, GPO e ferramentas RMM):
+
+- `0`: concluído sem erros operacionais e sem problemas críticos no diagnóstico
+- `1`: erro operacional (ex.: execução sem privilégio de administrador, falha de backup ou relatório)
+- `2`: manutenção concluída, mas o diagnóstico detectou um ou mais problemas críticos
+- `3`: execução ignorada porque outra instância do otimizador já está em andamento nesta máquina
+
 ---
 
 ## Segurança
 
-- Exige administrador e cria **ponto de restauração** antes de alterar o sistema
-- Todo valor de registro alterado é salvo em `backup\registro.json` antes da mudança — a opção **Desfazer** restaura tudo
+- Exige administrador (e falha com erro claro no modo `-Automatico` se não estiver elevado, sem travar aguardando UAC) e cria **ponto de restauração** antes de alterar o sistema
+- Todo valor de registro alterado é salvo de forma atômica em `%ProgramData%\OtimizadorEmpresa\backup\registro.json` (isolado por máquina, evitando colisões quando executado a partir da rede) antes da mudança — a opção **Desfazer** restaura tudo (com migração automática de backups locais legados)
+- Proteção contra travessia por **links simbólicos e junctions** (`ReparsePoint`) durante a limpeza de pastas de usuários e caches
+- Resolução do perfil correto do usuário interativo ativo (`HKU:\<SID>`) ao executar como `SYSTEM` ou conta administrativa separada
+- Controle de execução simultânea via Mutex global e restauração garantida dos serviços do Windows Update (`wuauserv` e `bits`) com `try/finally`
 - Temporários com menos de 1 dia não são apagados; arquivos em uso são ignorados
 - Nada de arquivos pessoais (Documentos, Downloads, Área de Trabalho), programas ou dados de navegação é apagado
-- Tudo é registrado em `logs\`
+- Tudo é registrado em `logs\` (com fallback local caso a pasta do script seja somente leitura)
 - Código aberto em PowerShell puro, sem executáveis nem downloads de terceiros — fácil de auditar
 
 ## Requisitos
@@ -84,3 +94,7 @@ schtasks /Create /TN "Manutencao Otimizador" /SC WEEKLY /D FRI /ST 18:00 /RU SYS
 - Alertas por e-mail/Teams quando o disco estiver quase cheio ou o antivírus desatualizado
 - Remoção padronizada de bloatware de fábrica
 - Versão para servidores Windows
+
+## Contribuidores
+
+- **Vandyck Diniz** ([@VandyckLN](https://github.com/VandyckLN)) — melhorias de segurança e robustez (proteção contra symlink/junction, backup isolado por máquina, eliminação de execução dinâmica de strings, contexto de hive por SID, controle de concorrência e códigos de saída)
